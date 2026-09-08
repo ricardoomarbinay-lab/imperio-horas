@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMPERIO RP - STAFF HORAS</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gaming: {
+                            bg: '#060a14',
+                            card: '#0c1322',
+                            header: '#0a0f1d',
+                            border: '#1e293b',
+                            accent: '#3b82f6',
+                            high: '#dc2626',
+                            mid: '#9333ea',
+                            low: '#2563eb'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cursive: ['Caveat', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS Animations and Glassmorphism Styles -->
+    <style>
+        body {
+            background-color: #060a14;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060a14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+
+        .glass-card {
+            background: rgba(12, 19, 34, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 41, 59, 0.7);
+        }
+
+        .neon-border-red {
+            border-left: 4px solid #ef4444;
+        }
+        .neon-border-purple {
+            border-left: 4px solid #a855f7;
+        }
+        .neon-border-blue {
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Pulsing status ring animations */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 1; }
+            50% { transform: scale(1.25); opacity: 0.5; }
+            100% { transform: scale(0.95); opacity: 1; }
+        }
+
+        .pulse-red {
+            animation: pulse-ring 1.8s infinite ease-in-out;
+            background-color: #ef4444;
+            box-shadow: 0 0 12px #ef4444;
+        }
+        .pulse-amber {
+            animation: pulse-ring 1.8s infinite ease-in-out;
+            background-color: #f59e0b;
+            box-shadow: 0 0 12px #f59e0b;
+        }
+        .pulse-rose {
+            animation: pulse-ring 1.8s infinite ease-in-out;
+            background-color: #e11d48;
+            box-shadow: 0 0 12px #e11d48;
+        }
+
+        /* Lock Glow Effect */
+        .glow-lock {
+            box-shadow: 0 0 40px rgba(239, 68, 68, 0.4);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(239, 68, 68, 0.7); }
+        }
+
+        /* Drag and Drop dropzone animation */
+        .drop-target {
+            background-color: rgba(59, 130, 246, 0.18) !important;
+            border: 2px dashed #3b82f6 !important;
+        }
+
+        /* Solid Cell Colors */
+        .cell-color-normal {
+            background-color: transparent;
+            color: #cbd5e1;
+        }
+        .cell-color-inactivo {
+            background-color: #dc2626 !important;
+            color: #ffffff !important;
+            font-weight: 800;
+        }
+        .cell-color-justificada {
+            background-color: #d97706 !important;
+            color: #ffffff !important;
+            font-weight: 800;
+        }
+        .cell-color-anulado {
+            background-color: #be123c !important;
+            color: #ffffff !important;
+            font-weight: 800;
+        }
+
+        .time-cell-btn:hover {
+            transform: scale(1.05);
+            transition: all 0.15s ease;
+        }
+
+        .staff-table th, .staff-table td {
+            border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+        }
+
+        .channel-tab.active {
+            background-color: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            color: #ffffff;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-200">
+
+    <!-- RESTRICTED ACCESS FULLSCREEN OVERLAY (LOCKED SCREEN FOR NO_AUTH ROLE) -->
+    <div id="accessRestrictedOverlay" class="fixed inset-0 bg-[#040711] z-50 flex items-center justify-center p-6 hidden">
+        <div class="glass-card max-w-md w-full p-8 rounded-3xl border border-red-900/60 text-center space-y-6 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-12 -left-12 w-32 h-32 bg-red-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-amber-600/20 rounded-full blur-3xl"></div>
+
+            <!-- Glowing Animated Lock Icon -->
+            <div class="relative mx-auto w-24 h-24 rounded-full bg-red-950/80 border-2 border-red-600/80 flex items-center justify-center glow-lock">
+                <i class="fa-solid fa-lock text-red-500 text-4xl animate-bounce"></i>
+            </div>
+
+            <div class="space-y-2">
+                <h2 class="text-2xl font-black text-white tracking-wider">ACCESO RESTRINGIDO</h2>
+                <div class="inline-block px-3 py-1 rounded-full bg-red-950/80 text-red-400 border border-red-800/80 text-xs font-bold font-mono">
+                    IMPERIO RP - SISTEMA DE STAFF
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                Tu cuenta de correo Gmail <strong id="restrictedEmailDisplay" class="text-amber-400 font-mono">no@autorizado.com</strong> no se encuentra registrada en la Whitelist oficial o tu rol activo actual es <span class="text-red-400 font-bold">NO AUTORIZADO</span>.
+            </p>
+
+            <div class="pt-2 space-y-3">
+                <button id="restrictedLoginBtn" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-extrabold py-3 px-4 rounded-xl text-xs transition shadow-lg shadow-red-900/40 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Cerrar sesión / Cambiar cuenta</span>
+                </button>
+                <p class="text-[10px] text-slate-500">Contactá con la Administración Alta u OWNER para solicitar permisos.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APPLICATION CONTENT -->
+    <div id="app" class="flex flex-col flex-1 min-h-screen">
+
+        <!-- TOP HEADER BAR -->
+        <header class="bg-[#0a0f1d] border-b border-slate-800/80 sticky top-0 z-40 px-4 py-2.5 shadow-lg">
+            <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-4">
+                
+                <!-- Brand & Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 via-red-600 to-purple-700 flex items-center justify-center shadow-md shadow-red-900/30 border border-amber-400/30">
+                        <i class="fa-solid fa-crown text-amber-300 text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-extrabold text-lg tracking-wider text-white">IMPERIO RP</h1>
+                            <span class="text-xs bg-red-950/80 text-red-400 border border-red-800/50 px-2 py-0.5 rounded font-mono font-semibold">
+                                STAFF HORAS
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 font-medium">Panel Oficial de Control y Registro de Asistencia</p>
+                    </div>
+                </div>
+
+                <!-- Animated Status Badges, Live Clock & TOP USER RANK DISPLAY -->
+                <div class="flex items-center gap-4 flex-wrap">
+                    
+                    <!-- Pulsing Top Header Avisos Animados -->
+                    <div class="flex items-center gap-3 text-xs flex-wrap">
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/80 text-red-300 border border-red-800/60 font-semibold text-[11px] shadow-sm">
+                            <span class="w-2.5 h-2.5 rounded-full pulse-red"></span> Inactivo
+                        </span>
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-800/60 font-semibold text-[11px] shadow-sm">
+                            <span class="w-2.5 h-2.5 rounded-full pulse-amber"></span> Inactividad justificada
+                        </span>
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-950/80 text-rose-300 border border-rose-800/60 font-semibold text-[11px] shadow-sm">
+                            <span class="w-2.5 h-2.5 rounded-full pulse-rose"></span> Anulado
+                        </span>
+                    </div>
+
+                    <!-- Date & Time Live Widget -->
+                    <div class="flex items-center gap-3 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300 text-xs font-mono hidden sm:flex">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-regular fa-calendar-days text-blue-400"></i>
+                            <span id="liveDateStr">Martes, 08 Sep 2026</span>
+                        </div>
+                        <span class="text-slate-600">|</span>
+                        <div class="flex items-center gap-1.5 text-blue-400 font-bold">
+                            <i class="fa-regular fa-clock"></i>
+                            <span id="liveClockStr">14:32:00</span>
+                        </div>
+                    </div>
+
+                    <!-- PROMINENT USER WEB RANK BADGE & ROLE TEST SELECTOR -->
+                    <div class="flex items-center gap-3 bg-slate-900/90 border border-slate-700/80 px-3 py-1.5 rounded-2xl shadow-inner">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-user-shield text-amber-400 text-base"></i>
+                            <div class="flex flex-col">
+                                <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Tu Rango en la Web</span>
+                                <span id="topUserRankBadgeDisplay" class="text-xs font-black text-amber-300 flex items-center gap-1">
+                                    <i class="fa-solid fa-crown text-amber-400 text-[10px]"></i> OWNER
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Role Switcher Dropdown for Testing Permissions -->
+                        <div class="border-l border-slate-700/80 pl-2 ml-1">
+                            <select id="roleSwitchSelect" class="bg-slate-950 border border-slate-700 text-slate-200 text-[11px] font-bold rounded-lg px-2 py-1 focus:outline-none focus:border-blue-500 cursor-pointer" title="Cambiar rol activo para pruebas de interfaz">
+                                <option value="OWNER">Rol: OWNER</option>
+                                <option value="EDITOR">Rol: EDITOR</option>
+                                <option value="VIEWER">Rol: VIEWER</option>
+                                <option value="NO_AUTH">Rol: NO AUTORIZADO (Candado)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </header>
+
+        <!-- MAIN BODY WITH SIDEBAR & CONTENT -->
+        <div class="flex-1 flex max-w-[1920px] w-full mx-auto">
+
+            <!-- LEFT SIDEBAR WITH CHANNEL NAVIGATION -->
+            <aside class="w-64 bg-[#080d1a] border-r border-slate-800/80 flex flex-col justify-between shrink-0 hidden lg:flex select-none">
+                <div class="p-4 space-y-6">
+
+                    <!-- Channel Navigation Tabs -->
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-3 mb-1">Navegación de Canales</p>
+                        
+                        <!-- Channel 1: Horas Staff -->
+                        <button data-channel="horas" class="channel-tab active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white border border-transparent transition text-xs text-left">
+                            <i class="fa-regular fa-clock text-blue-400 w-4 text-center"></i>
+                            <span>Horas Staff</span>
+                        </button>
+
+                        <!-- Channel 2: Documentación e Información -->
+                        <button data-channel="doc" class="channel-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white border border-transparent transition text-xs text-left">
+                            <i class="fa-solid fa-book-bookmark text-emerald-400 w-4 text-center"></i>
+                            <span>Documentación e Info</span>
+                        </button>
+
+                        <!-- Channel 3: Gestión de Permisos (OWNER EXCLUSIVE) -->
+                        <button id="leftPermisosChannelBtn" data-channel="permisos" class="channel-tab role-owner-only w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-amber-400 bg-amber-500/10 border border-amber-500/20 text-xs font-bold transition text-left">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-user-shield text-amber-400 w-4 text-center"></i>
+                                <span>Gestión de Permisos</span>
+                            </div>
+                            <span class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.2 rounded font-extrabold">OWNER</span>
+                        </button>
+
+                        <!-- Channel 4: Editar Código (OWNER EXCLUSIVE) -->
+                        <button id="leftCodeChannelBtn" data-channel="code" class="channel-tab role-owner-only w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-amber-300 hover:bg-slate-800/60 border border-transparent transition text-xs text-left">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-code text-amber-400 w-4 text-center"></i>
+                                <span>Editar Código</span>
+                            </div>
+                            <span class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.2 rounded font-extrabold">OWNER</span>
+                        </button>
+
+                        <!-- Channel 5: Logs del Sistema -->
+                        <button data-channel="logs" class="channel-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white border border-transparent transition text-xs text-left">
+                            <i class="fa-solid fa-list-check text-purple-400 w-4 text-center"></i>
+                            <span>Logs del Sistema</span>
+                        </button>
+                    </div>
+
+                    <!-- Categories and Ranks Navigation -->
+                    <div class="space-y-2 pt-3 border-t border-slate-800/80">
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-3">Categorías y rangos</p>
+                        
+                        <div class="space-y-1">
+                            <a href="#high-staff-sec" class="flex items-center justify-between px-3 py-2 rounded-xl bg-red-950/30 border border-red-900/30 text-xs font-semibold text-red-400 hover:bg-red-900/40 transition">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-crown text-red-500"></i>
+                                    <span>HIGH STAFF</span>
+                                </div>
+                                <span id="countHighStaffPill" class="text-[10px] bg-red-900/60 px-2 py-0.5 rounded-full text-red-200 font-mono">3</span>
+                            </a>
+
+                            <a href="#mid-staff-sec" class="flex items-center justify-between px-3 py-2 rounded-xl bg-purple-950/30 border border-purple-900/30 text-xs font-semibold text-purple-400 hover:bg-purple-900/40 transition">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-crown text-purple-500"></i>
+                                    <span>MID STAFF</span>
+                                </div>
+                                <span id="countMidStaffPill" class="text-[10px] bg-purple-900/60 px-2 py-0.5 rounded-full text-purple-200 font-mono">3</span>
+                            </a>
+
+                            <a href="#low-staff-sec" class="flex items-center justify-between px-3 py-2 rounded-xl bg-blue-950/30 border border-blue-900/30 text-xs font-semibold text-blue-400 hover:bg-blue-900/40 transition">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-crown text-blue-500"></i>
+                                    <span>LOW STAFF</span>
+                                </div>
+                                <span id="countLowStaffPill" class="text-[10px] bg-blue-900/60 px-2 py-0.5 rounded-full text-blue-200 font-mono">3</span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer User Profile & Tagline Signature -->
+                <div class="p-4 border-t border-slate-800/80 space-y-4">
+                    
+                    <!-- Current Active User Card -->
+                    <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-2.5 overflow-hidden">
+                            <div class="relative shrink-0">
+                                <div class="w-9 h-9 rounded-full bg-red-600/30 border border-red-500 flex items-center justify-center font-bold text-red-400 text-xs">
+                                    <i class="fa-solid fa-crown text-amber-400"></i>
+                                </div>
+                                <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#080d1a] rounded-full"></span>
+                            </div>
+                            <div class="overflow-hidden">
+                                <p id="sidebarUserName" class="text-xs font-bold text-white truncate">Usuario Staff</p>
+                                <p id="sidebarUserRole" class="text-[10px] text-amber-400 font-semibold">Rol: OWNER</p>
+                            </div>
+                        </div>
+                        <button id="logoutBtn" class="text-slate-400 hover:text-red-400 p-1.5 rounded-lg hover:bg-slate-800 transition" title="Cerrar sesión">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Decorative Tagline -->
+                    <div class="text-center">
+                        <p class="font-cursive text-xl text-slate-400 tracking-wide select-none hover:text-amber-300 transition-colors">
+                            Disciplina, Compromiso, Imperio RP
+                        </p>
+                    </div>
+
+                </div>
+            </aside>
+
+            <!-- CENTER MAIN CONTENT AREA (DYNAMIC CHANNELS) -->
+            <main class="flex-1 p-4 lg:p-6 space-y-6 overflow-y-auto">
+
+                <!-- ==================== CHANNEL 1: HORAS STAFF ==================== -->
+                <div id="channelViewHoras" class="channel-view space-y-6">
+                    
+                    <!-- MAIN TABLE SECTION: REGISTRO DE HORAS -->
+                    <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col shadow-2xl">
+                        
+                        <!-- Table Header Controls Bar -->
+                        <div class="p-4 bg-slate-900/90 border-b border-slate-800 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                            
+                            <div>
+                                <h3 class="font-extrabold text-base text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-users-gear text-blue-400"></i>
+                                    Registro de horas del Staff
+                                </h3>
+                                <p class="text-xs text-slate-400">
+                                    Carga de asistencia diaria. Arrastrá filas para cambiar categoría.
+                                </p>
+                            </div>
+
+                            <!-- Action Toolbar -->
+                            <div class="flex items-center gap-2.5 flex-wrap">
+                                <!-- Search Staff -->
+                                <div class="relative flex-1 sm:w-64">
+                                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                                    <input type="text" id="searchStaffInput" placeholder="Buscar staff por nombre..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500">
+                                </div>
+
+                                <!-- Add User Button (Hidden for VIEWER role) -->
+                                <button id="openAddUserModalBtn" class="role-editor-only bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-blue-600/20 active:scale-95">
+                                    <i class="fa-solid fa-user-plus text-xs"></i>
+                                    <span>Agregar usuario</span>
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <!-- Table Container -->
+                        <div class="overflow-x-auto custom-scroll">
+                            <table class="w-full text-left border-collapse staff-table text-xs">
+                                <thead>
+                                    <tr class="bg-slate-950/90 text-slate-400 uppercase font-bold text-[10px] tracking-wider border-b border-slate-800 select-none">
+                                        <th class="p-3 w-10 text-center">
+                                            <input type="checkbox" id="selectAllCheckbox" class="rounded bg-slate-900 border-slate-700 text-blue-600 focus:ring-0">
+                                        </th>
+                                        <!-- Usuario Column (NO GMAIL DISPLAYED HERE FOR PRIVACY) -->
+                                        <th class="p-3 min-w-[180px]">Usuario</th>
+                                        <!-- Rango Column immediately to the left of Sabado -->
+                                        <th class="p-3 text-center min-w-[95px]">Rango</th>
+                                        <!-- Ordered Days: Sab, Dom, Lun, Mar, Mie, Jue, Vie -->
+                                        <th class="p-2 text-center w-16">Sáb<br><span class="text-[9px] font-normal text-slate-500">06/09</span></th>
+                                        <th class="p-2 text-center w-16">Dom<br><span class="text-[9px] font-normal text-slate-500">07/09</span></th>
+                                        <th class="p-2 text-center w-16">Lun<br><span class="text-[9px] font-normal text-slate-500">08/09</span></th>
+                                        <th class="p-2 text-center w-16">Mar<br><span class="text-[9px] font-normal text-slate-500">09/09</span></th>
+                                        <th class="p-2 text-center w-16">Mié<br><span class="text-[9px] font-normal text-slate-500">10/09</span></th>
+                                        <th class="p-2 text-center w-16">Jue<br><span class="text-[9px] font-normal text-slate-500">11/09</span></th>
+                                        <th class="p-2 text-center w-16">Vie<br><span class="text-[9px] font-normal text-slate-500">12/09</span></th>
+                                        <th class="p-3 text-center min-w-[110px] text-blue-400 font-extrabold bg-blue-950/20">Horas totales<br>esta semana</th>
+                                        <!-- Renamed Header: Paga semanal -->
+                                        <th class="p-3 text-center min-w-[125px] text-emerald-400 font-extrabold bg-emerald-950/20">Paga semanal</th>
+                                        <th class="p-3 text-center w-12">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="timesheetTableBody" class="divide-y divide-slate-800/60">
+                                    <!-- Dynamic Staff Rows Injected Here via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Table Footer Summary info (General payout total sum removed as requested) -->
+                        <div class="p-3 bg-slate-900/60 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                            <span id="showingCountText">Mostrando 9 de 9 usuarios</span>
+                            <div class="flex items-center gap-3">
+                                <span class="text-[11px] text-slate-500 italic"><i class="fa-solid fa-calculator text-blue-400 mr-1"></i> Paga semanal calculada en tiempo real según horas registradas</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- BOTTOM UTILITIES ROW -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <!-- Panel 1: Cambio de rango -->
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+                            <h4 class="font-bold text-xs text-white flex items-center gap-2">
+                                <i class="fa-solid fa-user-shield text-amber-400"></i>
+                                Cambio de rango rápido
+                            </h4>
+                            <p class="text-[11px] text-slate-400">Selecciona un usuario y cambia su rango autorizado</p>
+
+                            <div class="space-y-2">
+                                <select id="rankSwitchUserSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:border-blue-500">
+                                    <!-- Users list -->
+                                </select>
+
+                                <select id="rankSwitchTargetSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:border-blue-500">
+                                    <optgroup label="HIGH STAFF ($2.000.000)">
+                                        <option value="ADM++">ADM++</option>
+                                        <option value="ADM+">ADM+</option>
+                                        <option value="ADM">ADM</option>
+                                    </optgroup>
+                                    <optgroup label="MID STAFF ($1.500.000)">
+                                        <option value="MOD++">MOD++</option>
+                                        <option value="MOD+">MOD+</option>
+                                        <option value="MOD">MOD</option>
+                                    </optgroup>
+                                    <optgroup label="LOW STAFF ($1.000.000)">
+                                        <option value="SDP">SDP</option>
+                                        <option value="SP">SP</option>
+                                        <option value="SE">SE</option>
+                                    </optgroup>
+                                </select>
+
+                                <button id="applyRankSwitchBtn" class="role-editor-only w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 rounded-xl text-xs transition">
+                                    Cambiar rango
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Panel 2: Mover categoría rápido -->
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-xs text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-arrows-up-down-left-right text-purple-400"></i>
+                                    Mover categoría
+                                </h4>
+                                <p class="text-[11px] text-slate-400">Mueve usuarios seleccionados a otra categoría</p>
+                            </div>
+
+                            <div class="border-2 border-dashed border-slate-800 rounded-xl p-3 text-center bg-slate-950/40 space-y-2">
+                                <p class="text-[11px] text-slate-400">Mover rápido (checkboxes):</p>
+                                <div class="flex gap-1.5 justify-center">
+                                    <button id="quickMoveCatHigh" class="role-editor-only bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 text-[10px] font-bold px-2 py-1 rounded-lg">HIGH</button>
+                                    <button id="quickMoveCatMid" class="role-editor-only bg-purple-950/60 hover:bg-purple-900 border border-purple-800 text-purple-300 text-[10px] font-bold px-2 py-1 rounded-lg">MID</button>
+                                    <button id="quickMoveCatLow" class="role-editor-only bg-blue-950/60 hover:bg-blue-900 border border-blue-800 text-blue-300 text-[10px] font-bold px-2 py-1 rounded-lg">LOW</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 3: Leyenda de colores -->
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+                            <h4 class="font-bold text-xs text-white flex items-center gap-2">
+                                <i class="fa-solid fa-palette text-emerald-400"></i>
+                                Colores de las casillas
+                            </h4>
+                            
+                            <div class="space-y-2 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded bg-red-600 border border-red-400"></span>
+                                    <span class="text-slate-300 text-[11px]">Inactivo (Rojo sólido)</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded bg-amber-600 border border-amber-400"></span>
+                                    <span class="text-slate-300 text-[11px]">Inactividad justificada (Amarillo sólido)</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded bg-rose-700 border border-rose-500"></span>
+                                    <span class="text-slate-300 text-[11px]">Anulado (Rojo vivo sólido)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 4: Resumen del sistema -->
+                        <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+                            <h4 class="font-bold text-xs text-white flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-purple-400"></i>
+                                Resumen del staff
+                            </h4>
+
+                            <div class="space-y-1.5 text-[11px]">
+                                <div class="flex justify-between text-slate-400">
+                                    <span><i class="fa-solid fa-users text-slate-500 mr-1"></i> Total staff</span>
+                                    <span id="statTotalStaff" class="font-bold text-white font-mono">9</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span><i class="fa-solid fa-user-check text-red-500 mr-1"></i> HIGH STAFF ($2M)</span>
+                                    <span id="statHighCount" class="font-bold text-red-400 font-mono">3</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span><i class="fa-solid fa-user text-purple-500 mr-1"></i> MID STAFF ($1.5M)</span>
+                                    <span id="statMidCount" class="font-bold text-purple-400 font-mono">3</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span><i class="fa-solid fa-user text-blue-500 mr-1"></i> LOW STAFF ($1M)</span>
+                                    <span id="statLowCount" class="font-bold text-blue-400 font-mono">3</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ==================== CHANNEL 2: DOCUMENTACIÓN E INFORMACIÓN ==================== -->
+                <div id="channelViewDoc" class="channel-view space-y-6 hidden">
+                    <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                            <div>
+                                <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-book-bookmark text-emerald-400"></i>
+                                    Documentación e Información Interna
+                                </h2>
+                                <p class="text-xs text-slate-400">Notas, normativas, reglamentos y guía oficial para el equipo de Imperio RP.</p>
+                            </div>
+                            <button id="addDocNoteBtn" class="role-editor-only bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> Publicar anuncio
+                            </button>
+                        </div>
+
+                        <!-- Documents Cards List -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Doc 1 -->
+                            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] bg-red-950/80 text-red-400 border border-red-800/60 font-bold px-2 py-0.5 rounded uppercase">Reglamento General</span>
+                                    <span class="text-[10px] text-slate-500">Actualizado hoy</span>
+                                </div>
+                                <h3 class="font-bold text-sm text-white">Requisitos Mínimos de Horas Semanales</h3>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Todo miembro del equipo de Staff debe cumplir un mínimo de horas semanales para asegurar la efectividad de la moderación en el servidor Imperio RP. Las faltas injustificadas se marcarán con casilla roja de Inactivo.
+                                </p>
+                            </div>
+
+                            <!-- Doc 2 -->
+                            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] bg-amber-950/80 text-amber-400 border border-amber-800/60 font-bold px-2 py-0.5 rounded uppercase">Normativa de Pagas</span>
+                                    <span class="text-[10px] text-slate-500">Oficial</span>
+                                </div>
+                                <h3 class="font-bold text-sm text-white">Escala Salarial por Rango</h3>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    La Paga Semanal se liquida automáticamente proporcional a la cantidad de horas trabajadas según las bases fijadas por categoría: High Staff ($2.000.000), Mid Staff ($1.500.000) y Low Staff ($1.000.000).
+                                </p>
+                            </div>
+
+                            <!-- Doc 3 -->
+                            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] bg-blue-950/80 text-blue-400 border border-blue-800/60 font-bold px-2 py-0.5 rounded uppercase">Procedimiento</span>
+                                    <span class="text-[10px] text-slate-500">Guía</span>
+                                </div>
+                                <h3 class="font-bold text-sm text-white">Justificación de Inactividad</h3>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Si por motivos personales o de fuerza mayor no podés cumplir tus horas, notificá a un High Staff u OWNER previamente para asignar el estado "Inactividad justificada" en el panel.
+                                </p>
+                            </div>
+
+                            <!-- Doc 4 -->
+                            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] bg-purple-950/80 text-purple-400 border border-purple-800/60 font-bold px-2 py-0.5 rounded uppercase">Soporte y Dudas</span>
+                                    <span class="text-[10px] text-slate-500">Contacto</span>
+                                </div>
+                                <h3 class="font-bold text-sm text-white">Atención Interna Imperio RP</h3>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Ante cualquier inconformidad con el registro de horas o consulta sobre el cálculo de paga, podés acudir directamente al canal privado de Permisos o comunicarte con un OWNER.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== CHANNEL 3: GESTIÓN DE PERMISOS (OWNER ONLY) ==================== -->
+                <div id="channelViewPermisos" class="channel-view space-y-6 hidden">
+                    <div class="glass-card p-6 rounded-2xl border border-amber-500/30 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg">
+                                    <i class="fa-solid fa-user-shield"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+                                        Gestión de Permisos Whitelist Gmail
+                                        <span class="text-[10px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded font-extrabold uppercase">CANAL OWNER</span>
+                                    </h2>
+                                    <p class="text-xs text-slate-400">Canal exclusivo para administradores OWNER para otorgar, editar o revocar roles de acceso.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Gmail Permission Box -->
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                            <h3 class="font-bold text-xs text-white uppercase tracking-wider">Autorizar nuevo correo de Google</h3>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <input type="email" id="permChannelEmailInput" placeholder="correo.nuevo@gmail.com" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+                                <select id="permChannelRoleSelect" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+                                    <option value="OWNER">OWNER (Acceso Total)</option>
+                                    <option value="EDITOR" selected>EDITOR (Carga de Horas)</option>
+                                    <option value="VIEWER">VIEWER (Solo Lectura)</option>
+                                </select>
+                                <button id="permChannelAddBtn" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-black px-4 py-2 rounded-xl text-xs transition">
+                                    Asignar Permiso
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Whitelisted Gmail Table -->
+                        <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
+                                        <th class="p-3">Correo Gmail Autorizado</th>
+                                        <th class="p-3 text-center">Rol Asignado</th>
+                                        <th class="p-3 text-center">Fecha de Alta</th>
+                                        <th class="p-3 text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="permChannelTableBody" class="divide-y divide-slate-800/80">
+                                    <!-- Injected dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== CHANNEL 4: EDITAR CÓDIGO (OWNER ONLY) ==================== -->
+                <div id="channelViewCode" class="channel-view space-y-6 hidden">
+                    <div class="glass-card p-6 rounded-2xl border border-amber-500/30 flex flex-col space-y-4 h-[75vh]">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg">
+                                    <i class="fa-solid fa-code"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
+                                        Canal Editor de Código Fuente
+                                        <span class="text-[10px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded font-extrabold uppercase">EXCLUSIVO OWNER</span>
+                                    </h2>
+                                    <p class="text-xs text-slate-400">Inspecciona y copia el código HTML/JS de Imperio RP</p>
+                                </div>
+                            </div>
+
+                            <button id="channelCopyCodeBtn" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-black px-4 py-2 rounded-xl text-xs transition flex items-center gap-2">
+                                <i class="fa-regular fa-copy"></i> Copiar Todo
+                            </button>
+                        </div>
+
+                        <div class="flex-1 overflow-hidden relative rounded-xl border border-slate-800 bg-slate-950">
+                            <textarea id="channelCodeTextarea" class="w-full h-full p-4 font-mono text-xs bg-slate-950 text-emerald-400 focus:outline-none resize-none leading-relaxed" spellcheck="false"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== CHANNEL 5: LOGS DEL SISTEMA ==================== -->
+                <div id="channelViewLogs" class="channel-view space-y-6 hidden">
+                    <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                            <div>
+                                <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check text-purple-400"></i>
+                                    Auditoría de Logs del Sistema
+                                </h2>
+                                <p class="text-xs text-slate-400">Historial completo de cambios de horas, modificaciones de rango y permisos.</p>
+                            </div>
+                        </div>
+
+                        <div id="channelLogsContainer" class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs space-y-2 max-h-[60vh] overflow-y-auto custom-scroll">
+                            <!-- Log entries -->
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- RIGHT SIDEBAR (GESTIÓN DE PERMISOS DE PRIVACIDAD GMAIL - VISIBLE SOLO PARA OWNER) -->
+            <aside id="rightOwnerSidebar" class="w-80 bg-[#080d1a] border-l border-slate-800/80 p-4 flex flex-col justify-between shrink-0 hidden xl:flex gap-6 overflow-y-auto">
+                
+                <div class="space-y-6">
+
+                    <!-- GESTIÓN DE PERMISOS POR GMAIL -->
+                    <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                            <h3 class="font-extrabold text-xs text-white uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-user-shield text-blue-400"></i>
+                                Permisos por Gmail
+                            </h3>
+                            <span class="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded font-extrabold">OWNER</span>
+                        </div>
+
+                        <p class="text-[11px] text-slate-400">Panel privado de cuentas con permiso Whitelist.</p>
+
+                        <!-- Search email -->
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input type="text" id="searchEmailInput" placeholder="Buscar correo..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500">
+                        </div>
+
+                        <!-- Add Gmail Permission Form -->
+                        <div class="space-y-2 pt-1 border-t border-slate-800/60">
+                            <input type="email" id="newPermissionEmailInput" placeholder="ejemplo@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                            
+                            <div class="flex gap-2">
+                                <select id="newPermissionRoleSelect" class="bg-slate-950 border border-slate-800 rounded-xl px-2 py-1 text-xs text-slate-200 flex-1">
+                                    <option value="OWNER">OWNER</option>
+                                    <option value="EDITOR" selected>EDITOR</option>
+                                    <option value="VIEWER">VIEWER</option>
+                                </select>
+                                <button id="addGmailPermissionBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-3 rounded-xl text-xs transition">
+                                    Agregar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Scrollable User Email Cards List -->
+                        <div id="rightUserList" class="space-y-2 max-h-56 overflow-y-auto custom-scroll pr-1 pt-2">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- ACCIONES RÁPIDAS OWNER -->
+                    <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+                        <h3 class="font-extrabold text-xs text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-amber-400"></i>
+                            Acciones rápidas
+                        </h3>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="quickEditHoursBtn" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 p-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-pen text-blue-400"></i> Editar
+                            </button>
+                            <button id="quickViewHistoryBtn" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 p-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-purple-400"></i> Historial
+                            </button>
+                            <button id="quickAdminUsersBtn" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 p-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-user-gear text-amber-400"></i> Administrar
+                            </button>
+                            <button id="quickViewLogsBtn" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 p-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-receipt text-emerald-400"></i> Logs
+                            </button>
+                        </div>
+
+                        <button id="deleteSelectedUserBtn" class="w-full bg-red-900/30 hover:bg-red-800/50 border border-red-700/60 text-red-300 font-bold p-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 mt-2">
+                            <i class="fa-solid fa-trash-can"></i> Eliminar seleccionados
+                        </button>
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+        <!-- FOOTER BAR -->
+        <footer class="bg-[#060a14] border-t border-slate-800/80 px-6 py-2.5 text-slate-500 text-[11px] flex flex-wrap items-center justify-between gap-2 select-none">
+            <div class="flex items-center gap-2 font-semibold">
+                <span class="text-white">IMPERIO RP</span>
+                <span>·</span>
+                <span>Panel de Staff</span>
+                <span>·</span>
+                <span>Control de Horas</span>
+            </div>
+            <div class="font-bold tracking-widest uppercase text-[10px] text-slate-400">
+                JUNTOS HACEMOS EL SERVIDOR
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- MODALS & POPUPS CONTAINER -->
+
+    <!-- 1. Edit Cell Hours & Solid Color Popover Modal -->
+    <div id="cellEditModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card rounded-2xl max-w-sm w-full p-6 border border-slate-700 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-extrabold text-sm text-white flex items-center gap-2">
+                    <i class="fa-solid fa-clock text-blue-400"></i>
+                    Editar Registro de Día
+                </h3>
+                <button class="closeModalBtn text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Horas trabajadas (ej. 1:30 o 2:00)</label>
+                    <input type="text" id="modalCellTimeInput" value="0:00" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-lg font-bold font-mono text-white focus:outline-none focus:border-blue-500">
+                </div>
+
+                <!-- Quick add time buttons -->
+                <div class="grid grid-cols-4 gap-1.5">
+                    <button class="quickModalAddBtn bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono py-1 rounded-lg" data-val="0:30">+0:30</button>
+                    <button class="quickModalAddBtn bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono py-1 rounded-lg" data-val="1:00">+1:00</button>
+                    <button class="quickModalAddBtn bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono py-1 rounded-lg" data-val="1:30">+1:30</button>
+                    <button class="quickModalAddBtn bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono py-1 rounded-lg" data-val="2:00">+2:00</button>
+                </div>
+
+                <!-- Solid Color Selector -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-2">Color sólido de estado de casilla:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" class="colorOptionBtn p-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-300 flex items-center gap-2" data-color="normal">
+                            <span class="w-3 h-3 rounded-full bg-slate-600"></span> Normal
+                        </button>
+                        <button type="button" class="colorOptionBtn p-2 rounded-xl text-xs font-bold border border-red-600 bg-red-950/80 text-red-200 flex items-center gap-2" data-color="inactivo">
+                            <span class="w-3 h-3 rounded-full bg-red-600"></span> Inactivo
+                        </button>
+                        <button type="button" class="colorOptionBtn p-2 rounded-xl text-xs font-bold border border-amber-600 bg-amber-950/80 text-amber-200 flex items-center gap-2" data-color="justificada">
+                            <span class="w-3 h-3 rounded-full bg-amber-500"></span> Justificada
+                        </button>
+                        <button type="button" class="colorOptionBtn p-2 rounded-xl text-xs font-bold border border-rose-600 bg-rose-950/80 text-rose-200 flex items-center gap-2" data-color="anulado">
+                            <span class="w-3 h-3 rounded-full bg-rose-600"></span> Anulado
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2 border-t border-slate-800">
+                    <button type="button" class="closeModalBtn bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs">Cancelar</button>
+                    <button id="saveCellDataBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-xl text-xs">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Rank Picker Popover Modal -->
+    <div id="rankPickerModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card rounded-2xl max-w-xs w-full p-5 border border-slate-700 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <h3 class="font-extrabold text-xs text-white uppercase flex items-center gap-2">
+                    <i class="fa-solid fa-shield text-amber-400"></i>
+                    Seleccionar Rango
+                </h3>
+                <button class="closeModalBtn text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <p id="rankPickerCatLabel" class="text-[11px] text-amber-400 font-bold">Categoría: HIGH STAFF</p>
+
+            <div id="rankPickerButtonsContainer" class="space-y-2 pt-1">
+                <!-- Injected dynamically based on category -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Add User Modal -->
+    <div id="addUserModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card rounded-2xl max-w-md w-full p-6 border border-slate-700 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-extrabold text-base text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-blue-400"></i>
+                    Agregar Nuevo Staff
+                </h3>
+                <button class="closeModalBtn text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="addUserForm" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Nombre completo del Staff</label>
+                    <input type="text" id="newStaffName" required placeholder="ej. Tomas Alvarez" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Correo electrónico Gmail (Guarda sólo para permisos OWNER)</label>
+                    <input type="email" id="newStaffEmail" required placeholder="ej. tomas@imperio.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">Categoría</label>
+                        <select id="newStaffCat" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            <option value="HIGH STAFF">HIGH STAFF ($2M)</option>
+                            <option value="MID STAFF" selected>MID STAFF ($1.5M)</option>
+                            <option value="LOW STAFF">LOW STAFF ($1M)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">Rango</label>
+                        <select id="newStaffRank" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" class="closeModalBtn bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs">Cancelar</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-xl text-xs">Guardar Staff</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT LOGIC & STATE MANAGEMENT -->
+    <script type="module">
+        // Global User Role State in Website: 'OWNER', 'EDITOR', 'VIEWER', or 'NO_AUTH'
+        window.currentRole = 'OWNER';
+
+        // Strict Weekly Base Rates per Category
+        const CATEGORY_RATES = {
+            'HIGH STAFF': 2000000,
+            'MID STAFF': 1500000,
+            'LOW STAFF': 1000000
+        };
+
+        // Standard target hours for 100% full weekly rate
+        const BASE_TARGET_HOURS = 10;
+
+        // Strict Ranks per Category
+        window.CATEGORY_RANKS = {
+            'HIGH STAFF': ['ADM++', 'ADM+', 'ADM'],
+            'MID STAFF': ['MOD++', 'MOD+', 'MOD'],
+            'LOW STAFF': ['SDP', 'SP', 'SE']
+        };
+
+        // Initial Staff Seed Data (Notice: emails stored internally for reference but NEVER shown in main timesheet table!)
+        const DEFAULT_STAFF = [
+            // HIGH STAFF
+            { id: 'usr_1', name: 'Ricardo Omar Binay', email: 'ricardo@imperio.com', rank: 'ADM++', category: 'HIGH STAFF', hours: { sat: '2:00', sun: '1:30', mon: '2:00', tue: '1:00', wed: '2:00', thu: '1:30', fri: '0:00' }, colors: {} },
+            { id: 'usr_2', name: 'Tomas Alvarez', email: 'tomas@imperio.com', rank: 'ADM+', category: 'HIGH STAFF', hours: { sat: '1:00', sun: '2:00', mon: '1:30', tue: '1:30', wed: '1:00', thu: '1:00', fri: '1:00' }, colors: {} },
+            { id: 'usr_3', name: 'Santiago Rojas', email: 'santi@imperio.com', rank: 'ADM', category: 'HIGH STAFF', hours: { sat: '0:00', sun: '0:00', mon: '2:00', tue: '2:00', wed: '2:00', thu: '1:00', fri: '1:00' }, colors: {} },
+            
+            // MID STAFF
+            { id: 'usr_4', name: 'Mateo Gonzalez', email: 'mateo@imperio.com', rank: 'MOD++', category: 'MID STAFF', hours: { sat: '1:30', sun: '1:30', mon: '1:30', tue: '1:30', wed: '1:30', thu: '1:30', fri: '0:00' }, colors: {} },
+            { id: 'usr_5', name: 'Lautaro Perez', email: 'lau@imperio.com', rank: 'MOD+', category: 'MID STAFF', hours: { sat: '2:00', sun: '2:00', mon: '0:00', tue: '1:00', wed: '1:00', thu: '2:00', fri: '1:00' }, colors: { mon: 'justificada' } },
+            { id: 'usr_6', name: 'Agustín Silva', email: 'agus_silva@imperio.com', rank: 'MOD', category: 'MID STAFF', hours: { sat: '0:00', sun: '0:00', mon: '0:00', tue: '0:00', wed: '0:00', thu: '0:00', fri: '0:00' }, colors: { sat: 'inactivo', sun: 'inactivo' } },
+
+            // LOW STAFF
+            { id: 'usr_7', name: 'Facundo Castro', email: 'facu@imperio.com', rank: 'SDP', category: 'LOW STAFF', hours: { sat: '1:00', sun: '1:00', mon: '1:00', tue: '1:00', wed: '1:00', thu: '1:00', fri: '1:00' }, colors: {} },
+            { id: 'usr_8', name: 'Nicolas Torres', email: 'nicolas@imperio.com', rank: 'SP', category: 'LOW STAFF', hours: { sat: '2:00', sun: '1:30', mon: '2:00', tue: '2:00', wed: '0:00', thu: '0:00', fri: '0:00' }, colors: {} },
+            { id: 'usr_9', name: 'Bruno Lopez', email: 'bruno@imperio.com', rank: 'SE', category: 'LOW STAFF', hours: { sat: '0:00', sun: '0:00', mon: '0:00', tue: '0:00', wed: '0:00', thu: '0:00', fri: '0:00' }, colors: { tue: 'anulado' } }
+        ];
+
+        // Whitelist Gmail Permissions List
+        window.gmailPermissions = [
+            { email: 'owner@imperio.com', role: 'OWNER', date: '01/09/2026' },
+            { email: 'editor@imperio.com', role: 'EDITOR', date: '02/09/2026' },
+            { email: 'viewer@imperio.com', role: 'VIEWER', date: '03/09/2026' }
+        ];
+
+        window.staffList = [...DEFAULT_STAFF];
+        window.selectedUserIds = new Set();
+        window.collapsedCategories = { 'HIGH STAFF': false, 'MID STAFF': false, 'LOW STAFF': false };
+        window.systemLogs = [
+            { id: 1, time: '14:32:00', text: 'Sistema iniciado en modo de alta disponibilidad.' },
+            { id: 2, time: '14:30:12', text: 'Sincronización de Whitelist efectuada correctamente.' }
+        ];
+
+        // Days mapping (Order: Saturday to Friday)
+        window.DAYS = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'];
+
+        // Temporary target variables for modal edits
+        window.editingCellTarget = { userId: null, dayKey: null, timeVal: '0:00', colorVal: 'normal' };
+        window.editingRankUser = null;
+
+        window.timeStrToDecimal = function(timeStr) {
+            if (!timeStr || typeof timeStr !== 'string') return 0;
+            const parts = timeStr.split(':');
+            if (parts.length < 2) return parseFloat(timeStr) || 0;
+            const hrs = parseInt(parts[0], 10) || 0;
+            const mins = parseInt(parts[1], 10) || 0;
+            return hrs + (mins / 60);
+        };
+
+        window.decimalToTimeStr = function(decimal) {
+            if (isNaN(decimal) || decimal <= 0) return '0:00';
+            const hrs = Math.floor(decimal);
+            const mins = Math.round((decimal - hrs) * 60);
+            return `${hrs}:${mins < 10 ? '0' : ''}${mins}`;
+        };
+
+        window.calculateUserTotalHoursDecimal = function(user) {
+            if (!user || !user.hours) return 0;
+            let total = 0;
+            window.DAYS.forEach(day => {
+                total += window.timeStrToDecimal(user.hours[day] || '0:00');
+            });
+            return total;
+        };
+
+        // Rank Badge HTML Generator
+        window.getRankBadgeHtml = function(rank) {
+            switch (rank) {
+                // HIGH STAFF
+                case 'ADM++':
+                    return `<span class="px-2 py-0.5 rounded-full bg-red-600 text-white font-extrabold text-[10px] inline-flex items-center gap-1 shadow-sm shadow-red-600/40 cursor-pointer hover:scale-105 transition"><i class="fa-solid fa-shield-halved text-[9px]"></i> ADM++</span>`;
+                case 'ADM+':
+                    return `<span class="px-2 py-0.5 rounded-full bg-red-600/80 text-white font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer hover:scale-105 transition"><i class="fa-solid fa-shield text-[9px]"></i> ADM+</span>`;
+                case 'ADM':
+                    return `<span class="px-2 py-0.5 rounded-full bg-red-700/80 text-white font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer hover:scale-105 transition"><i class="fa-solid fa-user-shield text-[9px]"></i> ADM</span>`;
+                
+                // MID STAFF
+                case 'MOD++':
+                    return `<span class="px-2 py-0.5 rounded-full bg-purple-600 text-white font-extrabold text-[10px] inline-flex items-center gap-1 shadow-sm shadow-purple-600/50 cursor-pointer hover:scale-105 transition"><i class="fa-solid fa-crown text-[9px]"></i> MOD++</span>`;
+                case 'MOD+':
+                    return `<span class="px-2 py-0.5 rounded-full bg-purple-600/90 text-white font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer hover:scale-105 transition"><i class="fa-solid fa-user-shield text-[9px]"></i> MOD+</span>`;
+                case 'MOD':
+                    return `<span class="px-2 py-0.5 rounded-full bg-purple-600/80 text-white font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer hover:scale-105 transition"><i class="fa-solid fa-user-shield text-[9px]"></i> MOD</span>`;
+                
+                // LOW STAFF
+                case 'SDP':
+                    return `<span class="px-2 py-0.5 rounded-full bg-cyan-600 text-white font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer hover:scale-105 transition"><i class="fa-solid fa-shield text-[9px]"></i> SDP</span>`;
+                case 'SP':
+                    return `<span class="px-2 py-0.5 rounded-full bg-blue-600 text-white font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer hover:scale-105 transition"><i class="fa-solid fa-crown text-[9px]"></i> SP</span>`;
+                case 'SE':
+                    return `<span class="px-2 py-0.5 rounded-full bg-amber-500 text-black font-black text-[10px] inline-flex items-center gap-1 shadow-sm shadow-amber-500/40 cursor-pointer hover:scale-105 transition"><i class="fa-solid fa-star text-[9px]"></i> SE</span>`;
+                
+                default:
+                    return `<span class="px-2 py-0.5 rounded-full bg-slate-700 text-slate-200 font-bold text-[10px] cursor-pointer">${rank}</span>`;
+            }
+        };
+
+        window.renderTimesheet = function() {
+            const tableBody = document.getElementById('timesheetTableBody');
+            const searchVal = document.getElementById('searchStaffInput').value.toLowerCase().trim();
+
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+
+            const categories = [
+                { name: 'HIGH STAFF', color: 'red', border: 'neon-border-red', bgHeader: 'from-red-950/90 via-red-900/40 to-slate-900', rate: CATEGORY_RATES['HIGH STAFF'] },
+                { name: 'MID STAFF', color: 'purple', border: 'neon-border-purple', bgHeader: 'from-purple-950/90 via-purple-900/40 to-slate-900', rate: CATEGORY_RATES['MID STAFF'] },
+                { name: 'LOW STAFF', color: 'blue', border: 'neon-border-blue', bgHeader: 'from-blue-950/90 via-blue-900/40 to-slate-900', rate: CATEGORY_RATES['LOW STAFF'] }
+            ];
+
+            let totalStaffCount = 0;
+
+            categories.forEach(cat => {
+                const catUsers = window.staffList.filter(u => u.category === cat.name && (!searchVal || u.name.toLowerCase().includes(searchVal)));
+                
+                // Category Header Row
+                const catHeaderTr = document.createElement('tr');
+                catHeaderTr.className = `bg-gradient-to-r ${cat.bgHeader} ${cat.border} border-y border-slate-800 cursor-pointer select-none cat-drop-zone`;
+                catHeaderTr.dataset.category = cat.name;
+
+                const isCollapsed = window.collapsedCategories[cat.name];
+                const chevronIcon = isCollapsed ? 'fa-chevron-right' : 'fa-chevron-down';
+
+                catHeaderTr.innerHTML = `
+                    <td colspan="13" class="p-2.5">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-crown text-${cat.color}-500 text-sm"></i>
+                                <span class="font-extrabold text-xs text-white tracking-wider">${cat.name}</span>
+                                <span class="text-[10px] bg-slate-950/80 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-500/20">
+                                    Base Semanal: $ ${cat.rate.toLocaleString('es-AR')}
+                                </span>
+                                <span class="text-[10px] bg-slate-900/80 text-slate-400 px-2 py-0.5 rounded-full border border-slate-800">
+                                    ${catUsers.length} usuarios
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="drop-label hidden text-[10px] font-bold text-blue-400 animate-pulse bg-blue-950/80 px-2 py-0.5 rounded border border-blue-500">
+                                    <i class="fa-solid fa-arrows-down-to-line mr-1"></i> Suelte aquí para mover
+                                </span>
+                                <i class="fa-solid ${chevronIcon} text-slate-400 text-xs px-2"></i>
+                            </div>
+                        </div>
+                    </td>
+                `;
+
+                // Toggle category collapse
+                catHeaderTr.addEventListener('click', (e) => {
+                    if (e.target.closest('.drop-label')) return;
+                    window.collapsedCategories[cat.name] = !window.collapsedCategories[cat.name];
+                    window.renderTimesheet();
+                });
+
+                // Drag and drop events for category header
+                if (window.currentRole !== 'VIEWER') {
+                    catHeaderTr.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        catHeaderTr.classList.add('drop-target');
+                        const label = catHeaderTr.querySelector('.drop-label');
+                        if (label) label.classList.remove('hidden');
+                    });
+
+                    catHeaderTr.addEventListener('dragleave', () => {
+                        catHeaderTr.classList.remove('drop-target');
+                        const label = catHeaderTr.querySelector('.drop-label');
+                        if (label) label.classList.add('hidden');
+                    });
+
+                    catHeaderTr.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        catHeaderTr.classList.remove('drop-target');
+                        const label = catHeaderTr.querySelector('.drop-label');
+                        if (label) label.classList.add('hidden');
+
+                        const userId = e.dataTransfer.getData('text/plain');
+                        if (userId) {
+                            window.moveUserToCategory(userId, cat.name);
+                        }
+                    });
+                }
+
+                tableBody.appendChild(catHeaderTr);
+
+                if (!isCollapsed) {
+                    catUsers.forEach(user => {
+                        totalStaffCount++;
+                        const userHoursDecimal = window.calculateUserTotalHoursDecimal(user);
+                        
+                        // Calculate Real-Time Weekly Payout (Paga semanal)
+                        const userPayout = userHoursDecimal > 0 ? (userHoursDecimal / BASE_TARGET_HOURS) * cat.rate : 0;
+
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-slate-900/50 transition-colors group cursor-grab active:cursor-grabbing';
+                        tr.draggable = window.currentRole !== 'VIEWER';
+
+                        tr.addEventListener('dragstart', (e) => {
+                            e.dataTransfer.setData('text/plain', user.id);
+                        });
+
+                        // Days Cells Generation with solid colors
+                        let daysCellsHtml = '';
+                        window.DAYS.forEach(day => {
+                            const val = (user.hours && user.hours[day]) || '0:00';
+                            const colorState = (user.colors && user.colors[day]) || 'normal';
+
+                            let colorClass = 'cell-color-normal';
+                            if (colorState === 'inactivo') colorClass = 'cell-color-inactivo';
+                            else if (colorState === 'justificada') colorClass = 'cell-color-justificada';
+                            else if (colorState === 'anulado') colorClass = 'cell-color-anulado';
+
+                            daysCellsHtml += `
+                                <td class="p-1 text-center font-mono">
+                                    <button type="button" data-userid="${user.id}" data-day="${day}" class="timeCellBtn w-12 py-1 px-0.5 rounded text-xs transition ${colorClass} hover:ring-2 hover:ring-blue-500/50">
+                                        ${val}
+                                    </button>
+                                </td>
+                            `;
+                        });
+
+                        const isChecked = window.selectedUserIds.has(user.id) ? 'checked' : '';
+
+                        // NOTICE: Gmail is strictly HIDDEN here for Privacy! Only Avatar + Name + Rank Badge
+                        tr.innerHTML = `
+                            <td class="p-2 text-center">
+                                <input type="checkbox" data-userid="${user.id}" class="rowCheckbox rounded bg-slate-900 border-slate-700 text-blue-600 focus:ring-0">
+                            </td>
+                            <td class="p-2">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-slate-300 text-xs shrink-0 shadow-inner">
+                                        <i class="fa-solid fa-user text-[10px]"></i>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <p class="font-bold text-white text-xs truncate">${user.name}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- Rango Column immediately to the left of Sabado -->
+                            <td class="p-2 text-center select-none">
+                                <span class="rankBadgeTrigger" data-userid="${user.id}">${window.getRankBadgeHtml(user.rank)}</span>
+                            </td>
+                            ${daysCellsHtml}
+                            <td class="p-2 text-center font-mono font-extrabold text-blue-400 bg-blue-950/20 text-xs">
+                                ${window.decimalToTimeStr(userHoursDecimal)}
+                            </td>
+                            <!-- Column "Paga semanal" -->
+                            <td class="p-2 text-center font-mono font-extrabold text-emerald-400 bg-emerald-950/20 text-xs">
+                                $ ${Math.round(userPayout).toLocaleString('es-AR')}
+                            </td>
+                            <td class="p-2 text-center">
+                                <button data-userid="${user.id}" class="deleteUserRowBtn role-editor-only text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-slate-800 transition" title="Eliminar usuario">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </td>
+                        `;
+
+                        // Add cell click listeners for editing cell hours & colors
+                        const timeBtns = tr.querySelectorAll('.timeCellBtn');
+                        timeBtns.forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                if (window.currentRole === 'VIEWER') {
+                                    window.showToast('El rol VIEWER es de solo lectura', 'info');
+                                    return;
+                                }
+                                const uid = e.currentTarget.dataset.userid;
+                                const dayKey = e.currentTarget.dataset.day;
+                                window.openCellEditModal(uid, dayKey);
+                            });
+                        });
+
+                        // Add Rank click picker listener
+                        const rankBtn = tr.querySelector('.rankBadgeTrigger');
+                        if (rankBtn) {
+                            rankBtn.addEventListener('click', () => {
+                                if (window.currentRole === 'VIEWER') {
+                                    window.showToast('El rol VIEWER es de solo lectura', 'info');
+                                    return;
+                                }
+                                window.openRankPickerModal(user);
+                            });
+                        }
+
+                        // Checkbox selection listener
+                        const chk = tr.querySelector('.rowCheckbox');
+                        if (chk) {
+                            chk.addEventListener('change', (e) => {
+                                if (e.target.checked) window.selectedUserIds.add(user.id);
+                                else window.selectedUserIds.delete(user.id);
+                            });
+                        }
+
+                        // Delete button
+                        const delBtn = tr.querySelector('.deleteUserRowBtn');
+                        if (delBtn) {
+                            delBtn.addEventListener('click', () => {
+                                if (window.currentRole === 'VIEWER') return;
+                                window.deleteStaffUser(user.id);
+                            });
+                        }
+
+                        tableBody.appendChild(tr);
+                    });
+                }
+            });
+
+            // Update bottom system stats
+            document.getElementById('statTotalStaff').textContent = window.staffList.length;
+            document.getElementById('statHighCount').textContent = window.staffList.filter(u => u.category === 'HIGH STAFF').length;
+            document.getElementById('statMidCount').textContent = window.staffList.filter(u => u.category === 'MID STAFF').length;
+            document.getElementById('statLowCount').textContent = window.staffList.filter(u => u.category === 'LOW STAFF').length;
+
+            document.getElementById('showingCountText').textContent = `Mostrando ${totalStaffCount} de ${window.staffList.length} usuarios`;
+
+            // Update Category Pill Counts in left sidebar
+            document.getElementById('countHighStaffPill').textContent = window.staffList.filter(u => u.category === 'HIGH STAFF').length;
+            document.getElementById('countMidStaffPill').textContent = window.staffList.filter(u => u.category === 'MID STAFF').length;
+            document.getElementById('countLowStaffPill').textContent = window.staffList.filter(u => u.category === 'LOW STAFF').length;
+
+            window.applyRoleVisibility();
+            window.renderRightUserList();
+            window.renderPermChannelTable();
+            window.populateUserDropdowns();
+        };
+
+        window.applyRoleVisibility = function() {
+            const role = window.currentRole;
+            const isOwner = role === 'OWNER';
+            const isViewer = role === 'VIEWER';
+            const isNoAuth = role === 'NO_AUTH';
+
+            // 1. Restricted Lock Overlay Check
+            const lockOverlay = document.getElementById('accessRestrictedOverlay');
+            if (isNoAuth) {
+                if (lockOverlay) lockOverlay.classList.remove('hidden');
+            } else {
+                if (lockOverlay) lockOverlay.classList.add('hidden');
+            }
+
+            // 2. Header Web Rank Badge Update
+            const topBadge = document.getElementById('topUserRankBadgeDisplay');
+            if (topBadge) {
+                if (isOwner) {
+                    topBadge.className = 'text-xs font-black text-amber-300 flex items-center gap-1';
+                    topBadge.innerHTML = `<i class="fa-solid fa-crown text-amber-400 text-[10px]"></i> OWNER`;
+                } else if (role === 'EDITOR') {
+                    topBadge.className = 'text-xs font-black text-blue-300 flex items-center gap-1';
+                    topBadge.innerHTML = `<i class="fa-solid fa-pen text-blue-400 text-[10px]"></i> EDITOR`;
+                } else if (role === 'VIEWER') {
+                    topBadge.className = 'text-xs font-black text-slate-300 flex items-center gap-1';
+                    topBadge.innerHTML = `<i class="fa-regular fa-eye text-slate-400 text-[10px]"></i> VIEWER`;
+                } else {
+                    topBadge.className = 'text-xs font-black text-red-400 flex items-center gap-1';
+                    topBadge.innerHTML = `<i class="fa-solid fa-lock text-red-500 text-[10px]"></i> NO AUTORIZADO`;
+                }
+            }
+
+            // 3. Left Sidebar User Card
+            const sidebarRole = document.getElementById('sidebarUserRole');
+            if (sidebarRole) sidebarRole.textContent = `Rol: ${role}`;
+
+            // 4. Owner-Only Elements (Right Sidebar & Owner Left Channels)
+            const rightSidebar = document.getElementById('rightOwnerSidebar');
+            if (rightSidebar) {
+                if (isOwner) rightSidebar.classList.remove('hidden');
+                else rightSidebar.classList.add('hidden');
+            }
+
+            document.querySelectorAll('.role-owner-only').forEach(el => {
+                if (isOwner) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+
+            // 5. Editor/Owner Elements (Hidden for Viewer)
+            document.querySelectorAll('.role-editor-only').forEach(el => {
+                if (isViewer || isNoAuth) el.classList.add('hidden');
+                else el.classList.remove('hidden');
+            });
+        };
+
+        window.openCellEditModal = function(userId, dayKey) {
+            const user = window.staffList.find(u => u.id === userId);
+            if (!user) return;
+
+            window.editingCellTarget = {
+                userId,
+                dayKey,
+                timeVal: (user.hours && user.hours[dayKey]) || '0:00',
+                colorVal: (user.colors && user.colors[dayKey]) || 'normal'
+            };
+
+            document.getElementById('modalCellTimeInput').value = window.editingCellTarget.timeVal;
+            
+            // Highlight color option button
+            document.querySelectorAll('.colorOptionBtn').forEach(btn => {
+                if (btn.dataset.color === window.editingCellTarget.colorVal) {
+                    btn.classList.add('ring-2', 'ring-blue-500');
+                } else {
+                    btn.classList.remove('ring-2', 'ring-blue-500');
+                }
+            });
+
+            document.getElementById('cellEditModal').classList.remove('hidden');
+        };
+
+        window.openRankPickerModal = function(user) {
+            window.editingRankUser = user;
+            const container = document.getElementById('rankPickerButtonsContainer');
+            const catLabel = document.getElementById('rankPickerCatLabel');
+
+            if (!container || !user) return;
+            catLabel.textContent = `Categoría Actual: ${user.category}`;
+            container.innerHTML = '';
+
+            const allowedRanks = window.CATEGORY_RANKS[user.category] || [];
+            allowedRanks.forEach(r => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'w-full text-left p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 flex items-center justify-between transition';
+                btn.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        ${window.getRankBadgeHtml(r)}
+                        <span class="text-xs font-bold text-white">${r}</span>
+                    </div>
+                    ${user.rank === r ? '<i class="fa-solid fa-check text-emerald-400 text-xs"></i>' : ''}
+                `;
+
+                btn.addEventListener('click', () => {
+                    user.rank = r;
+                    window.renderTimesheet();
+                    document.getElementById('rankPickerModal').classList.add('hidden');
+                    window.showToast(`Rango actualizado a ${r}`, 'success');
+                    window.addLogEntry(`Rango cambiado para ${user.name}: ${r}`);
+                });
+
+                container.appendChild(btn);
+            });
+
+            document.getElementById('rankPickerModal').classList.remove('hidden');
+        };
+
+        window.moveUserToCategory = function(userId, newCat) {
+            const user = window.staffList.find(u => u.id === userId);
+            if (!user) return;
+
+            user.category = newCat;
+            const validRanks = window.CATEGORY_RANKS[newCat];
+            if (validRanks && !validRanks.includes(user.rank)) {
+                user.rank = validRanks[0];
+            }
+
+            window.renderTimesheet();
+            window.showToast(`${user.name} movido a ${newCat}`, 'success');
+            window.addLogEntry(`${user.name} movido a la categoría ${newCat}`);
+        };
+
+        // Render Right Sidebar Email Permission List
+        window.renderRightUserList = function() {
+            const container = document.getElementById('rightUserList');
+            const searchVal = document.getElementById('searchEmailInput').value.toLowerCase().trim();
+            if (!container) return;
+
+            container.innerHTML = '';
+            const filtered = window.gmailPermissions.filter(p => !searchVal || p.email.toLowerCase().includes(searchVal));
+
+            filtered.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-2 rounded-xl bg-slate-900/80 border border-slate-800 text-xs hover:border-slate-700 transition';
+                
+                let roleColor = 'text-amber-400 bg-amber-500/10 border-amber-500/20';
+                if (p.role === 'EDITOR') roleColor = 'text-blue-400 bg-blue-500/10 border-blue-500/20';
+                else if (p.role === 'VIEWER') roleColor = 'text-slate-400 bg-slate-500/10 border-slate-500/20';
+
+                item.innerHTML = `
+                    <div class="flex items-center gap-2 overflow-hidden">
+                        <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold text-[10px] shrink-0">
+                            <i class="fa-brands fa-google text-[10px]"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="font-semibold text-white text-[11px] truncate">${p.email}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="text-[9px] px-1.5 py-0.5 rounded border font-extrabold ${roleColor}">${p.role}</span>
+                        <button data-email="${p.email}" class="removePermissionBtn text-slate-500 hover:text-red-400 p-1 rounded transition">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
+                `;
+
+                const delBtn = item.querySelector('.removePermissionBtn');
+                delBtn.addEventListener('click', (e) => {
+                    const em = e.currentTarget.dataset.email;
+                    window.gmailPermissions = window.gmailPermissions.filter(x => x.email !== em);
+                    window.renderRightUserList();
+                    window.renderPermChannelTable();
+                    window.showToast(`Permiso revocado para ${em}`, 'error');
+                });
+
+                container.appendChild(item);
+            });
+        };
+
+        // Render Dedicated Owner Permissions Channel Table
+        window.renderPermChannelTable = function() {
+            const tableBody = document.getElementById('permChannelTableBody');
+            if (!tableBody) return;
+
+            tableBody.innerHTML = '';
+            window.gmailPermissions.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-900/60 transition';
+
+                let roleBadge = '<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">OWNER</span>';
+                if (p.role === 'EDITOR') roleBadge = '<span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold border border-blue-500/30">EDITOR</span>';
+                else if (p.role === 'VIEWER') roleBadge = '<span class="px-2 py-0.5 rounded bg-slate-500/20 text-slate-300 font-bold border border-slate-500/30">VIEWER</span>';
+
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-white flex items-center gap-2">
+                        <i class="fa-brands fa-google text-slate-400"></i>
+                        ${p.email}
+                    </td>
+                    <td class="p-3 text-center">${roleBadge}</td>
+                    <td class="p-3 text-center text-slate-400 text-[11px]">${p.date || '08/09/2026'}</td>
+                    <td class="p-3 text-center">
+                        <button data-email="${p.email}" class="removePermChannelBtn text-red-400 hover:text-red-300 p-1 rounded hover:bg-slate-800 transition" title="Revocar acceso">
+                            <i class="fa-solid fa-user-minus"></i>
+                        </button>
+                    </td>
+                `;
+
+                const btn = tr.querySelector('.removePermChannelBtn');
+                if (btn) {
+                    btn.addEventListener('click', (e) => {
+                        const em = e.currentTarget.dataset.email;
+                        window.gmailPermissions = window.gmailPermissions.filter(x => x.email !== em);
+                        window.renderRightUserList();
+                        window.renderPermChannelTable();
+                        window.showToast(`Acceso revocado a ${em}`, 'error');
+                    });
+                }
+
+                tableBody.appendChild(tr);
+            });
+        };
+
+        // Populate Dropdowns for Quick Switcher
+        window.populateUserDropdowns = function() {
+            const select = document.getElementById('rankSwitchUserSelect');
+            if (!select) return;
+
+            const currentVal = select.value;
+            select.innerHTML = '';
+            window.staffList.forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u.id;
+                opt.textContent = `${u.name} (${u.rank})`;
+                select.appendChild(opt);
+            });
+            select.value = currentVal;
+
+            const newCatSelect = document.getElementById('newStaffCat');
+            const newRankSelect = document.getElementById('newStaffRank');
+            if (newCatSelect && newRankSelect) {
+                const updateAddRanks = () => {
+                    const cat = newCatSelect.value;
+                    const ranks = window.CATEGORY_RANKS[cat] || [];
+                    newRankSelect.innerHTML = ranks.map(r => `<option value="${r}">${r}</option>`).join('');
+                };
+                newCatSelect.onchange = updateAddRanks;
+                if (!newRankSelect.children.length) updateAddRanks();
+            }
+        };
+
+        window.showToast = function(msg, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            let bg = 'bg-slate-900 border-slate-700 text-white';
+            if (type === 'success') bg = 'bg-emerald-950/90 border-emerald-700 text-emerald-200';
+            else if (type === 'error') bg = 'bg-red-950/90 border-red-700 text-red-200';
+
+            toast.className = `p-3 rounded-xl border shadow-xl text-xs flex items-center gap-2 pointer-events-auto transition-all transform duration-200 ${bg}`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> <span>${msg}</span>`;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        window.addLogEntry = function(text) {
+            const now = new Date();
+            const timeStr = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+            window.systemLogs.unshift({ id: Date.now(), time: timeStr, text });
+
+            const logsCont = document.getElementById('channelLogsContainer');
+            if (logsCont) {
+                logsCont.innerHTML = window.systemLogs.map(l => `
+                    <div class="flex items-start gap-2 border-b border-slate-900 pb-1.5">
+                        <span class="text-blue-400 font-bold">[${l.time}]</span>
+                        <span class="text-slate-300">${l.text}</span>
+                    </div>
+                `).join('');
+            }
+        };
+
+        // Delete Staff User
+        window.deleteStaffUser = function(userId) {
+            const user = window.staffList.find(u => u.id === userId);
+            window.staffList = window.staffList.filter(u => u.id !== userId);
+            window.selectedUserIds.delete(userId);
+            window.renderTimesheet();
+
+            window.showToast(`Usuario ${user ? user.name : ''} eliminado`, 'error');
+            window.addLogEntry(`Usuario ${user ? user.name : userId} eliminado.`);
+        };
+
+        window.setupChannelNavigation = function() {
+            const tabs = document.querySelectorAll('.channel-tab');
+            const views = {
+                'horas': document.getElementById('channelViewHoras'),
+                'doc': document.getElementById('channelViewDoc'),
+                'permisos': document.getElementById('channelViewPermisos'),
+                'code': document.getElementById('channelViewCode'),
+                'logs': document.getElementById('channelViewLogs')
+            };
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const targetChannel = tab.dataset.channel;
+                    
+                    // Owner Security Guard for private channels
+                    if ((targetChannel === 'permisos' || targetChannel === 'code') && window.currentRole !== 'OWNER') {
+                        window.showToast('Acceso Restringido: Este canal es exclusivo para el rol OWNER', 'error');
+                        return;
+                    }
+
+                    // Update Active Tab Styling
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    // Switch Visible Channel View
+                    Object.keys(views).forEach(key => {
+                        if (views[key]) {
+                            if (key === targetChannel) views[key].classList.remove('hidden');
+                            else views[key].classList.add('hidden');
+                        }
+                    });
+
+                    // Auto populate code channel textarea
+                    if (targetChannel === 'code') {
+                        const codeArea = document.getElementById('channelCodeTextarea');
+                        if (codeArea) codeArea.value = document.documentElement.outerHTML;
+                    }
+
+                    window.addLogEntry(`Navegación al canal: ${targetChannel.toUpperCase()}`);
+                });
+            });
+        };
+
+        // Live Clock
+        window.startLiveClock = function() {
+            const clockEl = document.getElementById('liveClockStr');
+            const dateEl = document.getElementById('liveDateStr');
+
+            const update = () => {
+                const now = new Date();
+                if (clockEl) clockEl.textContent = now.toLocaleTimeString('es-AR');
+                if (dateEl) {
+                    const options = { weekday: 'long', day: '2-digit', month: 'short', year: 'numeric' };
+                    dateEl.textContent = now.toLocaleDateString('es-AR', options);
+                }
+            };
+            update();
+            setInterval(update, 1000);
+        };
+
+        window.setupEventListeners = function() {
+            window.startLiveClock();
+            window.setupChannelNavigation();
+
+            // Role Switcher for Testing (Header)
+            document.getElementById('roleSwitchSelect').addEventListener('change', (e) => {
+                window.currentRole = e.target.value;
+                
+                // If switched to NO_AUTH, lock screen overlay activates automatically
+                if (window.currentRole === 'NO_AUTH') {
+                    document.getElementById('accessRestrictedOverlay').classList.remove('hidden');
+                } else {
+                    document.getElementById('accessRestrictedOverlay').classList.add('hidden');
+                }
+
+                window.renderTimesheet();
+                window.showToast(`Modo cambiado a rol: ${window.currentRole}`, 'info');
+                window.addLogEntry(`Prueba de rol alternado a: ${window.currentRole}`);
+            });
+
+            // Unlock button in Restricted Screen
+            document.getElementById('restrictedLoginBtn').addEventListener('click', () => {
+                const select = document.getElementById('roleSwitchSelect');
+                select.value = 'OWNER';
+                window.currentRole = 'OWNER';
+                document.getElementById('accessRestrictedOverlay').classList.add('hidden');
+                window.renderTimesheet();
+                window.showToast('Sesión restaurada como OWNER', 'success');
+            });
+
+            // Search Filter Inputs
+            document.getElementById('searchStaffInput').addEventListener('input', window.renderTimesheet);
+            document.getElementById('searchEmailInput').addEventListener('input', window.renderRightUserList);
+
+            // Modals Controls
+            const addUserModal = document.getElementById('addUserModal');
+            document.getElementById('openAddUserModalBtn').addEventListener('click', () => addUserModal.classList.remove('hidden'));
+
+            document.querySelectorAll('.closeModalBtn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    addUserModal.classList.add('hidden');
+                    document.getElementById('cellEditModal').classList.add('hidden');
+                    document.getElementById('rankPickerModal').classList.add('hidden');
+                });
+            });
+
+            // Cell Edit Modal Save & Color pick
+            document.querySelectorAll('.colorOptionBtn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const col = e.currentTarget.dataset.color;
+                    window.editingCellTarget.colorVal = col;
+                    document.querySelectorAll('.colorOptionBtn').forEach(b => b.classList.remove('ring-2', 'ring-blue-500'));
+                    e.currentTarget.classList.add('ring-2', 'ring-blue-500');
+                });
+            });
+
+            document.querySelectorAll('.quickModalAddBtn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.getElementById('modalCellTimeInput').value = e.target.dataset.val;
+                });
+            });
+
+            document.getElementById('saveCellDataBtn').addEventListener('click', () => {
+                const { userId, dayKey } = window.editingCellTarget;
+                const timeVal = document.getElementById('modalCellTimeInput').value.trim();
+                const colorVal = window.editingCellTarget.colorVal;
+
+                const user = window.staffList.find(u => u.id === userId);
+                if (user) {
+                    if (!user.hours) user.hours = {};
+                    if (!user.colors) user.colors = {};
+
+                    user.hours[dayKey] = timeVal;
+                    user.colors[dayKey] = colorVal;
+
+                    window.renderTimesheet();
+                    document.getElementById('cellEditModal').classList.add('hidden');
+                    window.showToast('Casilla actualizada', 'success');
+                    window.addLogEntry(`Casilla actualizada para ${user.name} (${dayKey.toUpperCase()}: ${timeVal} - ${colorVal})`);
+                }
+            });
+
+            // Add Gmail Permission Buttons
+            const addPermissionHandler = (emailInputId, roleSelectId) => {
+                const email = document.getElementById(emailInputId).value.trim();
+                const role = document.getElementById(roleSelectId).value;
+
+                if (!email) {
+                    window.showToast('Ingresá un correo Gmail válido', 'error');
+                    return;
+                }
+
+                const todayStr = new Date().toLocaleDateString('es-AR');
+                window.gmailPermissions.push({ email, role, date: todayStr });
+                window.renderRightUserList();
+                window.renderPermChannelTable();
+                document.getElementById(emailInputId).value = '';
+                window.showToast(`Permiso ${role} concedido a ${email}`, 'success');
+                window.addLogEntry(`Nuevo permiso Whitelist otorgado a ${email} [${role}]`);
+            };
+
+            document.getElementById('addGmailPermissionBtn').addEventListener('click', () => {
+                addPermissionHandler('newPermissionEmailInput', 'newPermissionRoleSelect');
+            });
+
+            const channelAddBtn = document.getElementById('permChannelAddBtn');
+            if (channelAddBtn) {
+                channelAddBtn.addEventListener('click', () => {
+                    addPermissionHandler('permChannelEmailInput', 'permChannelRoleSelect');
+                });
+            }
+
+            // Add User Form Submit
+            document.getElementById('addUserForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('newStaffName').value.trim();
+                const email = document.getElementById('newStaffEmail').value.trim();
+                const cat = document.getElementById('newStaffCat').value;
+                const rank = document.getElementById('newStaffRank').value;
+
+                const newUser = {
+                    id: 'usr_' + Date.now(),
+                    name,
+                    email,
+                    category: cat,
+                    rank,
+                    hours: { sat: '0:00', sun: '0:00', mon: '0:00', tue: '0:00', wed: '0:00', thu: '0:00', fri: '0:00' },
+                    colors: {}
+                };
+
+                window.staffList.push(newUser);
+                window.renderTimesheet();
+                addUserModal.classList.add('hidden');
+                document.getElementById('addUserForm').reset();
+
+                window.showToast(`Staff ${name} agregado exitosamente`, 'success');
+                window.addLogEntry(`Nuevo staff agregado: ${name} (${rank} - ${cat})`);
+            });
+
+            // Copy Source Code in Code Channel
+            const channelCopyBtn = document.getElementById('channelCopyCodeBtn');
+            if (channelCopyBtn) {
+                channelCopyBtn.addEventListener('click', () => {
+                    const textarea = document.getElementById('channelCodeTextarea');
+                    if (textarea) {
+                        textarea.select();
+                        document.execCommand('copy');
+                        window.showToast('Código fuente copiado al portapapeles', 'success');
+                    }
+                });
+            }
+
+            // Quick Move Category Buttons (Checkboxes)
+            document.getElementById('quickMoveCatHigh').addEventListener('click', () => window.moveSelectedUsersCategory('HIGH STAFF'));
+            document.getElementById('quickMoveCatMid').addEventListener('click', () => window.moveSelectedUsersCategory('MID STAFF'));
+            document.getElementById('quickMoveCatLow').addEventListener('click', () => window.moveSelectedUsersCategory('LOW STAFF'));
+
+            window.moveSelectedUsersCategory = function(targetCat) {
+                if (window.selectedUserIds.size === 0) {
+                    window.showToast('Selecciona al menos un usuario de la tabla', 'error');
+                    return;
+                }
+
+                window.selectedUserIds.forEach(uid => {
+                    window.moveUserToCategory(uid, targetCat);
+                });
+
+                window.renderTimesheet();
+            };
+
+            // Apply Rank Switcher Button
+            document.getElementById('applyRankSwitchBtn').addEventListener('click', () => {
+                const uid = document.getElementById('rankSwitchUserSelect').value;
+                const newRank = document.getElementById('rankSwitchTargetSelect').value;
+                const user = window.staffList.find(u => u.id === uid);
+
+                if (user) {
+                    user.rank = newRank;
+                    window.renderTimesheet();
+                    window.showToast(`Rango de ${user.name} cambiado a ${newRank}`, 'success');
+                }
+            });
+
+            // Quick Actions & Delete
+            document.getElementById('deleteSelectedUserBtn').addEventListener('click', () => {
+                if (window.selectedUserIds.size === 0) {
+                    window.showToast('Selecciona usuarios para eliminar', 'error');
+                    return;
+                }
+                window.selectedUserIds.forEach(id => window.deleteStaffUser(id));
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                window.showToast('Sesión de usuario cerrada', 'info');
+            });
+        };
+
+        // Initialization
+        window.addEventListener('load', () => {
+            window.setupEventListeners();
+            window.renderTimesheet();
+            window.addLogEntry('Interfaz IMPERIO RP STAFF HORAS cargada completamente.');
+        });
+    </script>
+</body>
+</html>
