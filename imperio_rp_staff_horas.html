@@ -1054,7 +1054,20 @@
             });
             return total;
         };
+window.HOURLY_RATES = {
+  'ADM': 2000000, 'ADM+': 2000000, 'ADM++': 2000000,
+  'MOD': 1500000, 'MOD+': 1500000, 'MOD++': 1500000,
+  'SDP': 1000000, 'SP': 1000000, 'SE': 1000000
+};
 
+window.calculateUserWeeklyPay = function(user) {
+  if (!user) return "$ 0";
+  const totalHours = window.calculateUserTotalHoursDecimal(user);
+  const rate = window.HOURLY_RATES[user.rank] || 0;
+  const totalPay = Math.round(totalHours * rate);
+  
+  return "$ " + totalPay.toLocaleString('es-AR');
+};
         // Rank Badge HTML Generator
         window.getRankBadgeHtml = function(rank) {
             switch (rank) {
